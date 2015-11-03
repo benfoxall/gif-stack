@@ -650,6 +650,12 @@
             // else, Undefined/Do not dispose.
             // frame contains final pixel data from the last frame; do nothing
 
+
+            // MODIFIED BY @BENJAMINBENBEN
+            frame.clearRect(0,0, tmpCanvas.width, tmpCanvas.height);
+
+
+
             //Get existing pixels for img region after applying disposal method
             var imgData = frame.getImageData(img.leftPos, img.topPos, img.width, img.height);
 
@@ -947,5 +953,3 @@
 
     return SuperGif;
 }));
-
-

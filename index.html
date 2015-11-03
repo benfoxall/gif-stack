@@ -5,7 +5,11 @@
     <title>gif stack</title>
   </head>
   <body>
+    <img src="example.gif" />
     <script src="components/libgif-js/libgif.js"></script>
-    <script src="gif-stack.js"></script>
+    <script type="text/javascript">
+      new SuperGif({ gif: document.querySelector('img') } )
+        .load();
+    </script>
   </body>
 </html>
