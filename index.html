@@ -3,13 +3,108 @@
   <head>
     <meta charset="utf-8">
     <title>gif stack</title>
+    <style media="screen">
+      canvas { width: 100%; height: 100%}
+      body {margin:0}
+    </style>
   </head>
   <body>
     <img src="example.gif" />
+
     <script src="components/libgif-js/libgif.js"></script>
+    <script src="components/threejs/build/three.js"></script>
     <script type="text/javascript">
-      new SuperGif({ gif: document.querySelector('img') } )
-        .load();
+      var sg = new SuperGif({ gif: document.querySelector('img') } );
+
+      var textures = [];
+
+      sg.load(function(){
+
+        sg.pause();
+
+        sg.move_to(3);
+
+        var canvas = sg.get_canvas();
+
+        for(var i = 0; i < sg.get_length(); i++){
+          setTimeout(function(i){
+
+            sg.move_to(i);
+            var t = new THREE.Texture( canvas );
+            t.minFilter = THREE.NearestFilter;
+            t.needsUpdate = true;
+            t.transparent = true;
+
+            var geometry = new THREE.PlaneGeometry(1, 1, 1, 1)
+
+            var material = new THREE.MeshBasicMaterial( {
+              color: 0xffffff, side: THREE.DoubleSide,
+              map: t,
+              transparent: true
+            });
+            var cube = new THREE.Mesh( geometry, material );
+
+            cube.position.z = (i * 0.05) - 1;
+            group.add( cube );
+
+          }, i * 30, [i])
+
+        }
+
+
+
+
+
+        console.log("Loaded")
+      });
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize( window.innerWidth, window.innerHeight );
+      document.body.appendChild( renderer.domElement );
+
+
+      var group = new THREE.Object3D();
+      scene.add(group);
+      // var texture =
+
+      camera.position.z = 2;//5;
+
+
+var mx = 0, my = 0, zoom = 0;
+
+document.addEventListener('mousemove', function(e){
+  mx = e.x - (window.innerWidth/2);
+  my = e.y - (window.innerHeight/2);
+  zoom = Math.sqrt((my*my) + (mx*mx))
+}, false)
+
+      function render() {
+        requestAnimationFrame( render );
+        renderer.render( scene, camera );
+
+
+
+        group.rotation.x = my/200;
+        group.rotation.y = mx/200;
+        for (var i = 0; i < group.children.length; i++) {
+          group.children[i].position.z = (i * 0.05 * (zoom/80)) + 1 - (zoom/50);
+        }
+
+
+
+        // group.rotation.x = my/200;
+        // group.rotation.y = my/200;
+        // for (var i = 0; i < group.children.length; i++) {
+        //   group.children[i].position.z = (i * 0.05 * (mx/250)) +1;
+        // }
+
+
+
+      }
+render();
     </script>
   </body>
 </html>
