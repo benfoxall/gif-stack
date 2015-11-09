@@ -794,6 +794,7 @@
                 move_relative: stepFrame,
                 current_frame: function() { return i; },
                 length: function() { return frames.length },
+                frames: function() { return frames },
                 move_to: function ( frame_idx ) {
                     i = frame_idx;
                     putFrame();
@@ -909,6 +910,7 @@
             pause: player.pause,
             move_relative: player.move_relative,
             move_to: player.move_to,
+            frames: player.frames,
 
             // getters for instance vars
             get_playing      : function() { return player.playing },
